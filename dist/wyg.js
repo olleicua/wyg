@@ -3,19 +3,129 @@ docu.append(document.getElementById('display'), tree);
 document.getElementById('content').append(docu.jsxEntity(InsertFeatureButton, {
   parentNode: tree
 }));
-function selectFeature(block) {
-  block.replaceChildren();
-  block.append(docu.jsxEntity("button", null, "choice 1"));
-  block.append(docu.jsxEntity("button", null, "choice 2"));
+function renderer({
+  parentNode,
+  previousNode
+}) {
+  if (previousNode) {
+    return node => {
+      previousNode.after(node);
+    };
+  }
+  if (parentNode) {
+    return node => {
+      parentNode.appendChild(node);
+    };
+  }
+  throw 'feature requires either a parentNode or a previousNode to be specified';
+}
+class WYGTextNode {
+  constructor({
+    featureBlock
+  }) {
+    this.uiBlock = featureBlock;
+    featureBlock.WYGNode = this;
+    this.$el = document.createTextNode('test text');
+  }
+  initializeUI() {
+    this.uiBlock.append(docu.jsxEntity("b", {
+      style: {
+        color: 'yellow'
+      }
+    }, "UI not yet implemented"));
+  }
+}
+class WYGFeatureNode {
+  constructor({
+    featureBlock,
+    options
+  }) {
+    console.log(options);
+    options ||= {};
+    const Tag = options.tag || 'div';
+    this.uiBlock = featureBlock;
+    featureBlock.WYGNode = this;
+    this.$el = docu.jsxEntity(Tag, {
+      style: {
+        border: '2px solid blue',
+        padding: '1em',
+        margin: '1em'
+      }
+    }, "test feature content");
+  }
+  initializeUI() {
+    this.uiBlock.append(docu.jsxEntity("b", {
+      style: {
+        color: 'yellow'
+      }
+    }, "feature UI not yet implemented"));
+  }
+}
+function renderFeature({
+  featureBlock,
+  render,
+  featureClass,
+  options
+}) {
+  const featureNode = new featureClass({
+    featureBlock,
+    options
+  });
+  featureBlock.replaceChildren();
+  featureNode.initializeUI();
+  render(featureNode.$el);
+  featureBlock.after(docu.jsxEntity(InsertFeatureButton, {
+    previousNode: featureNode.$el
+  }));
+}
+function selectFeature({
+  featureBlock,
+  render
+}) {
+  featureBlock.replaceChildren();
+  featureBlock.append(docu.jsxEntity("button", {
+    onClick: () => renderFeature({
+      featureBlock,
+      render,
+      featureClass: WYGTextNode
+    })
+  }, "plain text"));
+  featureBlock.append(docu.jsxEntity("button", {
+    onClick: () => renderFeature({
+      featureBlock,
+      render,
+      featureClass: WYGFeatureNode,
+      options: {
+        tag: 'div'
+      }
+    })
+  }, "box feature"));
+  featureBlock.append(docu.jsxEntity("button", {
+    onClick: () => renderFeature({
+      featureBlock,
+      render,
+      featureClass: WYGFeatureNode,
+      options: {
+        tag: 'span'
+      }
+    })
+  }, "inline feature"));
 }
 function InsertFeatureButton({
   parentNode,
   previousNode
 }) {
-  const block = docu.jsxEntity("div", {
-    className: "feature-block"
+  const render = renderer({
+    parentNode,
+    previousNode
+  });
+  const featureBlock = docu.jsxEntity("div", {
+    className: "empty-feature-block"
   }, docu.jsxEntity("button", {
-    onClick: () => selectFeature(block)
+    onClick: () => selectFeature({
+      featureBlock,
+      render
+    })
   }, "+ add feature"));
-  return block;
+  return featureBlock;
 }
