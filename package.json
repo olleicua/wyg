@@ -1,0 +1,14 @@
+{
+  "name": "wyg",
+  "version": "1.0.0",
+  "description": "what you get",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "antha",
+  "license": "MIT",
+  "dependencies": {
+    "docu": "file:../docu-js/docu-1.0.0.tgz"
+  }
+}
