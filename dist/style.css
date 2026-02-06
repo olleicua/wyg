@@ -1,0 +1,36 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+#tool-nav {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 50px;
+  padding: 2px;
+  border-right: 2px solid #333;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+#content {
+  box-sizing: border-box;
+  height: 100vh;
+  width: calc(50vw - 50px);
+  padding: 10px;
+  border-right: 2px solid #333;
+  top: 0;
+  left: 52px;
+  position: fixed;
+}
+
+#display {
+  box-sizing: border-box;
+  height: 100vh;
+  width: calc(50vw - 4px);
+  padding: 0;
+  top: 0;
+  right: 0;
+  position: fixed;
+}
