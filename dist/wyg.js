@@ -25,14 +25,16 @@ class WYGTextNode {
   }) {
     this.uiBlock = featureBlock;
     featureBlock.WYGNode = this;
-    this.$el = document.createTextNode('test text');
+    this.$el = document.createTextNode('');
+    this.content = new docu.State('');
+    docu.assignProperties(this.$el, {
+      textContent: this.content
+    });
   }
   initializeUI() {
-    this.uiBlock.append(docu.jsxEntity("b", {
-      style: {
-        color: 'yellow'
-      }
-    }, "UI not yet implemented"));
+    this.uiBlock.append(docu.jsxEntity("textarea", {
+      onKeyUp: event => this.content.set(event.target.value)
+    }));
   }
 }
 class WYGFeatureNode {
@@ -54,11 +56,7 @@ class WYGFeatureNode {
     }, "test feature content");
   }
   initializeUI() {
-    this.uiBlock.append(docu.jsxEntity("b", {
-      style: {
-        color: 'yellow'
-      }
-    }, "feature UI not yet implemented"));
+    this.uiBlock.append(docu.jsxEntity("i", null, "feature UI not yet implemented"));
   }
 }
 function renderFeature({
@@ -67,6 +65,7 @@ function renderFeature({
   featureClass,
   options
 }) {
+  featureBlock.className = 'feature-block';
   const featureNode = new featureClass({
     featureBlock,
     options
@@ -82,6 +81,7 @@ function selectFeature({
   featureBlock,
   render
 }) {
+  featureBlock.className = 'feature-block-selector';
   featureBlock.replaceChildren();
   featureBlock.append(docu.jsxEntity("button", {
     onClick: () => renderFeature({

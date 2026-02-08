@@ -27,11 +27,19 @@ class WYGTextNode {
   constructor({ featureBlock }) {
     this.uiBlock = featureBlock;
     featureBlock.WYGNode = this;
-    this.$el = document.createTextNode('test text');
+    this.$el = document.createTextNode('');
+    this.content = new docu.State('')
+    docu.assignProperties(this.$el, { textContent: this.content });
   }
 
   initializeUI() {
-    this.uiBlock.append(<b style={{ color: 'yellow' }}>UI not yet implemented</b>);
+    this.uiBlock.append(
+      <textarea
+	onKeyUp={
+	  (event) => this.content.set(event.target.value)
+	}
+      ></textarea>
+    );
   }
 }
 
@@ -51,11 +59,13 @@ class WYGFeatureNode {
   }
 
   initializeUI() {
-    this.uiBlock.append(<b style={{ color: 'yellow' }}>feature UI not yet implemented</b>);
+    this.uiBlock.append(<i>feature UI not yet implemented</i>);
   }
 }
 
 function renderFeature({ featureBlock, render, featureClass, options }) {
+  featureBlock.className = 'feature-block';
+
   const featureNode = new featureClass({ featureBlock, options });
   featureBlock.replaceChildren();
   featureNode.initializeUI();
@@ -65,6 +75,8 @@ function renderFeature({ featureBlock, render, featureClass, options }) {
 }
 
 function selectFeature({ featureBlock, render }) {
+  featureBlock.className = 'feature-block-selector';
+
   featureBlock.replaceChildren();
   featureBlock.append(
     <button

@@ -34,3 +34,23 @@ html, body {
   right: 0;
   position: fixed;
 }
+
+.empty-feature-block {
+  margin: 5px;
+}
+
+.feature-block-selector {
+  border: 1px solid #333;
+  margin: 5px;
+  padding: 5px;
+}
+
+.feature-block-selector button {
+  margin-right: 5px;
+}
+
+.feature-block {
+  border: 1px solid #333;
+  margin: 5px;
+  padding: 5px;
+}
